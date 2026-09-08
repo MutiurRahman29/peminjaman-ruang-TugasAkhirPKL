@@ -1,0 +1,17 @@
+<?php
+
+namespace App\Policies;
+
+use App\Models\Peminjaman;
+use App\Models\User;
+
+class PeminjamanPolicy
+{
+    /**
+     * Determine whether the user can view the loan.
+     */
+    public function view(User $user, Peminjaman $peminjaman): bool
+    {
+        return $user->id_user === $peminjaman->id_user;
+    }
+}

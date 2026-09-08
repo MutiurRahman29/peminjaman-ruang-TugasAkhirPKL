@@ -15,6 +15,8 @@
             <nav>
                 <a href="{{ route('peminjam.ruangan.index') }}">Katalog Ruangan</a>
                 <a href="{{ route('peminjam.fasilitas.index') }}">Katalog Fasilitas</a>
+                <a href="{{ route('peminjam.peminjaman.index') }}">Riwayat Peminjaman</a>
+                <a href="{{ route('peminjam.peminjaman.create') }}">Ajukan Peminjaman</a>
             </nav>
         @endif
 

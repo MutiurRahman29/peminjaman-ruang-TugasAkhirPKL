@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Peminjam\FasilitasController;
+use App\Http\Controllers\Peminjam\PeminjamanController;
 use App\Http\Controllers\Peminjam\RuanganController;
 use Illuminate\Support\Facades\Route;
 
@@ -28,4 +29,9 @@ Route::middleware(['auth', 'role:peminjam'])
     ->group(function (): void {
         Route::get('/ruangan', [RuanganController::class, 'index'])->name('ruangan.index');
         Route::get('/fasilitas', [FasilitasController::class, 'index'])->name('fasilitas.index');
+
+        Route::get('/peminjaman', [PeminjamanController::class, 'index'])->name('peminjaman.index');
+        Route::get('/peminjaman/create', [PeminjamanController::class, 'create'])->name('peminjaman.create');
+        Route::post('/peminjaman', [PeminjamanController::class, 'store'])->name('peminjaman.store');
+        Route::get('/peminjaman/{peminjaman}', [PeminjamanController::class, 'show'])->name('peminjaman.show');
     });
