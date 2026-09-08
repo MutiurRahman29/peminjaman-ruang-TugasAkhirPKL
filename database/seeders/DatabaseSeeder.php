@@ -3,6 +3,8 @@
 namespace Database\Seeders;
 
 use App\Enums\KondisiFasilitas;
+use App\Enums\StatusRuangan;
+use App\Enums\UserRole;
 use App\Models\Fasilitas;
 use App\Models\Ruangan;
 use App\Models\User;
@@ -22,45 +24,38 @@ class DatabaseSeeder extends Seeder
             return;
         }
 
-        User::factory()->admin()->create([
-            'nama' => 'Admin Pengembangan',
-            'username' => 'admin',
-        ]);
+        foreach ([
+            ['username' => 'admin', 'nama' => 'Admin Pengembangan', 'role' => UserRole::Admin],
+            ['username' => 'petugas', 'nama' => 'Petugas Pengembangan', 'role' => UserRole::Petugas],
+            ['username' => 'peminjam', 'nama' => 'Peminjam Pengembangan', 'role' => UserRole::Peminjam],
+        ] as $user) {
+            User::firstOrCreate(
+                ['username' => $user['username']],
+                [...$user, 'password' => 'password'],
+            );
+        }
 
-        User::factory()->petugas()->create([
-            'nama' => 'Petugas Pengembangan',
-            'username' => 'petugas',
-        ]);
+        foreach ([
+            ['nama_ruangan' => 'Laboratorium Komputer', 'kapasitas' => 40, 'lokasi' => 'Gedung A Lantai 1'],
+            ['nama_ruangan' => 'Aula Sekolah', 'kapasitas' => 200, 'lokasi' => 'Gedung Utama'],
+            ['nama_ruangan' => 'Ruang Kelas 1', 'kapasitas' => 32, 'lokasi' => 'Gedung B Lantai 1'],
+        ] as $ruangan) {
+            Ruangan::firstOrCreate(
+                ['nama_ruangan' => $ruangan['nama_ruangan']],
+                [...$ruangan, 'status' => StatusRuangan::Tersedia],
+            );
+        }
 
-        User::factory()->peminjam()->create([
-            'nama' => 'Peminjam Pengembangan',
-            'username' => 'peminjam',
-        ]);
-
-        Ruangan::factory()->count(3)->create();
-
-        Fasilitas::factory()->create([
-            'nama_fasilitas' => 'Proyektor',
-            'jumlah' => 3,
-            'kondisi' => KondisiFasilitas::Baik,
-        ]);
-
-        Fasilitas::factory()->create([
-            'nama_fasilitas' => 'Laptop',
-            'jumlah' => 5,
-            'kondisi' => KondisiFasilitas::Baik,
-        ]);
-
-        Fasilitas::factory()->create([
-            'nama_fasilitas' => 'Sound System',
-            'jumlah' => 2,
-            'kondisi' => KondisiFasilitas::Baik,
-        ]);
-
-        Fasilitas::factory()->create([
-            'nama_fasilitas' => 'Microphone',
-            'jumlah' => 6,
-            'kondisi' => KondisiFasilitas::Baik,
-        ]);
+        foreach ([
+            ['nama_fasilitas' => 'Proyektor', 'jumlah' => 3],
+            ['nama_fasilitas' => 'Laptop', 'jumlah' => 5],
+            ['nama_fasilitas' => 'Sound System', 'jumlah' => 2],
+            ['nama_fasilitas' => 'Microphone', 'jumlah' => 6],
+        ] as $fasilitas) {
+            Fasilitas::firstOrCreate(
+                ['nama_fasilitas' => $fasilitas['nama_fasilitas']],
+                [...$fasilitas, 'kondisi' => KondisiFasilitas::Baik],
+            );
+        }
     }
 }

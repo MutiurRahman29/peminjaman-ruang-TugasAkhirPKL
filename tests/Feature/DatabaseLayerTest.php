@@ -79,14 +79,58 @@ class DatabaseLayerTest extends TestCase
         $this->assertTrue($detail->fasilitas->is($fasilitas));
     }
 
-    public function test_development_seeder_runs_in_testing(): void
+    public function test_development_seeder_is_idempotent_in_testing(): void
     {
+        $this->seed(DatabaseSeeder::class);
+
+        User::query()
+            ->where('username', 'admin')
+            ->firstOrFail()
+            ->update(['nama' => 'Admin Diubah']);
+
+        Ruangan::query()
+            ->where('nama_ruangan', 'Laboratorium Komputer')
+            ->firstOrFail()
+            ->update(['status' => StatusRuangan::Digunakan]);
+
+        Fasilitas::query()
+            ->where('nama_fasilitas', 'Proyektor')
+            ->firstOrFail()
+            ->update([
+                'jumlah' => 99,
+                'kondisi' => KondisiFasilitas::Rusak,
+            ]);
+
         $this->seed(DatabaseSeeder::class);
 
         $this->assertDatabaseCount('users', 3);
         $this->assertDatabaseCount('ruangan', 3);
         $this->assertDatabaseCount('fasilitas', 4);
         $this->assertDatabaseCount('peminjaman', 0);
-        $this->assertDatabaseHas('fasilitas', ['nama_fasilitas' => 'Proyektor']);
+        $this->assertDatabaseCount('detail_peminjaman', 0);
+
+        foreach (['admin', 'petugas', 'peminjam'] as $username) {
+            $this->assertDatabaseHas('users', ['username' => $username]);
+        }
+
+        $this->assertDatabaseHas('users', [
+            'username' => 'admin',
+            'nama' => 'Admin Diubah',
+        ]);
+
+        $this->assertDatabaseHas('ruangan', [
+            'nama_ruangan' => 'Laboratorium Komputer',
+            'status' => StatusRuangan::Digunakan->value,
+        ]);
+
+        $this->assertDatabaseHas('fasilitas', [
+            'nama_fasilitas' => 'Proyektor',
+            'jumlah' => 99,
+            'kondisi' => KondisiFasilitas::Rusak->value,
+        ]);
+
+        foreach (['Proyektor', 'Laptop', 'Sound System', 'Microphone'] as $namaFasilitas) {
+            $this->assertDatabaseHas('fasilitas', ['nama_fasilitas' => $namaFasilitas]);
+        }
     }
 }
