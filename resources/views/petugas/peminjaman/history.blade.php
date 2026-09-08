@@ -3,27 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Antrean Peminjaman</title>
+    <title>Riwayat Peminjaman</title>
 </head>
 <body>
     <main>
-        <h1>Antrean Peminjaman</h1>
+        <h1>Riwayat Peminjaman</h1>
 
         <nav>
-            <a href="{{ route('petugas.peminjaman.history') }}">Riwayat Peminjaman</a>
+            <a href="{{ route('petugas.peminjaman.index') }}">Antrean Peminjaman</a>
             <a href="{{ route('dashboard') }}">Dashboard</a>
         </nav>
 
-        @if (session('success'))
-            <p>{{ session('success') }}</p>
-        @endif
-
-        @if (session('error'))
-            <p>{{ session('error') }}</p>
-        @endif
-
         @if ($peminjaman->isEmpty())
-            <p>Tidak ada pengajuan yang menunggu persetujuan.</p>
+            <p>Belum ada peminjaman yang diproses.</p>
         @else
             <table>
                 <thead>
@@ -54,7 +46,6 @@
                 </tbody>
             </table>
         @endif
-
     </main>
 </body>
 </html>

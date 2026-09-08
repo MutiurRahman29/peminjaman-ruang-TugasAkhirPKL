@@ -44,9 +44,11 @@ Route::middleware(['auth', 'role:petugas'])
     ->name('petugas.')
     ->group(function (): void {
         Route::get('/peminjaman', [PetugasPeminjamanController::class, 'index'])->name('peminjaman.index');
+        Route::get('/peminjaman/riwayat', [PetugasPeminjamanController::class, 'history'])->name('peminjaman.history');
         Route::get('/peminjaman/{peminjaman}', [PetugasPeminjamanController::class, 'show'])->name('peminjaman.show');
         Route::patch('/peminjaman/{peminjaman}/approve', [PetugasPeminjamanController::class, 'approve'])->name('peminjaman.approve');
         Route::patch('/peminjaman/{peminjaman}/reject', [PetugasPeminjamanController::class, 'reject'])->name('peminjaman.reject');
+        Route::patch('/peminjaman/{peminjaman}/complete', [PetugasPeminjamanController::class, 'complete'])->name('peminjaman.complete');
     });
 
 Route::middleware(['auth', 'role:admin'])

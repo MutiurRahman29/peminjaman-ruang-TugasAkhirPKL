@@ -32,4 +32,12 @@ class PeminjamanPolicy
     {
         return $user->role === UserRole::Petugas;
     }
+
+    /**
+     * Determine whether the user can complete the loan.
+     */
+    public function complete(User $user, Peminjaman $peminjaman): bool
+    {
+        return $user->role === UserRole::Petugas;
+    }
 }

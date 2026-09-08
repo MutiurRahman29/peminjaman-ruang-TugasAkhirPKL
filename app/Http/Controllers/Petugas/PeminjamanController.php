@@ -6,6 +6,7 @@ use App\Enums\StatusPeminjaman;
 use App\Http\Controllers\Controller;
 use App\Models\Peminjaman;
 use App\Services\LoanApprovalService;
+use App\Services\LoanCompletionService;
 use DomainException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Gate;
@@ -27,6 +28,26 @@ class PeminjamanController extends Controller
             ->get();
 
         return view('petugas.peminjaman.index', compact('peminjaman'));
+    }
+
+    /**
+     * Display loans that have already been processed.
+     */
+    public function history(): View
+    {
+        $peminjaman = Peminjaman::query()
+            ->with(['user', 'ruangan', 'detailPeminjaman.fasilitas'])
+            ->whereIn('status', [
+                StatusPeminjaman::Disetujui,
+                StatusPeminjaman::Ditolak,
+                StatusPeminjaman::Selesai,
+            ])
+            ->orderByDesc('tanggal')
+            ->orderByDesc('jam_mulai')
+            ->orderByDesc('created_at')
+            ->get();
+
+        return view('petugas.peminjaman.history', compact('peminjaman'));
     }
 
     /**
@@ -75,5 +96,25 @@ class PeminjamanController extends Controller
         return redirect()
             ->route('petugas.peminjaman.show', $peminjaman)
             ->with('success', 'Pengajuan peminjaman ditolak.');
+    }
+
+    /**
+     * Mark an approved loan as completed.
+     */
+    public function complete(Peminjaman $peminjaman, LoanCompletionService $completion): RedirectResponse
+    {
+        Gate::authorize('complete', $peminjaman);
+
+        try {
+            $completion->complete($peminjaman);
+        } catch (DomainException $exception) {
+            return redirect()
+                ->route('petugas.peminjaman.show', $peminjaman)
+                ->with('error', $exception->getMessage());
+        }
+
+        return redirect()
+            ->route('petugas.peminjaman.show', $peminjaman)
+            ->with('success', 'Peminjaman berhasil ditandai selesai.');
     }
 }

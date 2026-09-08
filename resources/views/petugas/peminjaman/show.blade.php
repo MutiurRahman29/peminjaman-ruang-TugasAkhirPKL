@@ -57,7 +57,19 @@
             </form>
         @endif
 
-        <p><a href="{{ route('petugas.peminjaman.index') }}">Kembali ke antrean</a></p>
+        @if ($peminjaman->status === \App\Enums\StatusPeminjaman::Disetujui)
+            <form method="POST" action="{{ route('petugas.peminjaman.complete', $peminjaman) }}" onsubmit="return confirm('Tandai peminjaman ini selesai?');">
+                @csrf
+                @method('PATCH')
+                <button type="submit">Tandai Selesai</button>
+            </form>
+        @endif
+
+        <nav>
+            <a href="{{ route('petugas.peminjaman.index') }}">Antrean Peminjaman</a>
+            <a href="{{ route('petugas.peminjaman.history') }}">Riwayat Peminjaman</a>
+            <a href="{{ route('dashboard') }}">Dashboard</a>
+        </nav>
     </main>
 </body>
 </html>
