@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\Peminjam\FasilitasController;
+use App\Http\Controllers\Peminjam\RuanganController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -19,3 +21,11 @@ Route::middleware('auth')->group(function (): void {
         return view('dashboard');
     })->name('dashboard');
 });
+
+Route::middleware(['auth', 'role:peminjam'])
+    ->prefix('peminjam')
+    ->name('peminjam.')
+    ->group(function (): void {
+        Route::get('/ruangan', [RuanganController::class, 'index'])->name('ruangan.index');
+        Route::get('/fasilitas', [FasilitasController::class, 'index'])->name('fasilitas.index');
+    });

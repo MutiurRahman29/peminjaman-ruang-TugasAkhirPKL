@@ -11,6 +11,13 @@
         <p>Nama: {{ auth()->user()->nama }}</p>
         <p>Role: {{ auth()->user()->role->value }}</p>
 
+        @if (auth()->user()->role === \App\Enums\UserRole::Peminjam)
+            <nav>
+                <a href="{{ route('peminjam.ruangan.index') }}">Katalog Ruangan</a>
+                <a href="{{ route('peminjam.fasilitas.index') }}">Katalog Fasilitas</a>
+            </nav>
+        @endif
+
         <form method="POST" action="{{ route('logout') }}">
             @csrf
             <button type="submit">Keluar</button>
