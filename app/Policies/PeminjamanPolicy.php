@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Enums\UserRole;
 use App\Models\Peminjaman;
 use App\Models\User;
 
@@ -12,6 +13,23 @@ class PeminjamanPolicy
      */
     public function view(User $user, Peminjaman $peminjaman): bool
     {
-        return $user->id_user === $peminjaman->id_user;
+        return $user->role === UserRole::Petugas
+            || ($user->role === UserRole::Peminjam && $user->id_user === $peminjaman->id_user);
+    }
+
+    /**
+     * Determine whether the user can approve the loan.
+     */
+    public function approve(User $user, Peminjaman $peminjaman): bool
+    {
+        return $user->role === UserRole::Petugas;
+    }
+
+    /**
+     * Determine whether the user can reject the loan.
+     */
+    public function reject(User $user, Peminjaman $peminjaman): bool
+    {
+        return $user->role === UserRole::Petugas;
     }
 }

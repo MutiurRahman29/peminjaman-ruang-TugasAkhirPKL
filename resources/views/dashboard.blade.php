@@ -20,6 +20,12 @@
             </nav>
         @endif
 
+        @if (auth()->user()->role === \App\Enums\UserRole::Petugas)
+            <nav>
+                <a href="{{ route('petugas.peminjaman.index') }}">Antrean Peminjaman</a>
+            </nav>
+        @endif
+
         <form method="POST" action="{{ route('logout') }}">
             @csrf
             <button type="submit">Keluar</button>
