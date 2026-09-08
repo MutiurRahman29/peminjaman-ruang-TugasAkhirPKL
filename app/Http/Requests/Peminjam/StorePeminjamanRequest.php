@@ -41,6 +41,47 @@ class StorePeminjamanRequest extends FormRequest
     }
 
     /**
+     * Get custom validation messages for errors.
+     *
+     * @return array<string, string>
+     */
+    public function messages(): array
+    {
+        return [
+            'id_ruangan.required' => 'Ruangan wajib dipilih.',
+            'id_ruangan.integer' => 'Ruangan yang dipilih tidak valid atau tidak tersedia.',
+            'id_ruangan.exists' => 'Ruangan yang dipilih tidak valid atau tidak tersedia.',
+            'tanggal.required' => 'Tanggal wajib diisi.',
+            'tanggal.date' => 'Tanggal harus berupa tanggal yang valid.',
+            'tanggal.after_or_equal' => 'Tanggal harus hari ini atau setelahnya.',
+            'jam_mulai.required' => 'Jam mulai wajib diisi.',
+            'jam_mulai.date_format' => 'Format jam mulai tidak valid.',
+            'jam_selesai.required' => 'Jam selesai wajib diisi.',
+            'jam_selesai.date_format' => 'Format jam selesai tidak valid.',
+            'jam_selesai.after' => 'Jam selesai harus setelah jam mulai.',
+            'keperluan.required' => 'Keperluan wajib diisi.',
+            'keperluan.string' => 'Keperluan harus berupa teks.',
+            'keperluan.max' => 'Keperluan maksimal 1000 karakter.',
+        ];
+    }
+
+    /**
+     * Get custom attributes for validator errors.
+     *
+     * @return array<string, string>
+     */
+    public function attributes(): array
+    {
+        return [
+            'id_ruangan' => 'ruangan',
+            'tanggal' => 'tanggal',
+            'jam_mulai' => 'jam mulai',
+            'jam_selesai' => 'jam selesai',
+            'keperluan' => 'keperluan',
+        ];
+    }
+
+    /**
      * Configure the validator instance.
      */
     public function withValidator(Validator $validator): void

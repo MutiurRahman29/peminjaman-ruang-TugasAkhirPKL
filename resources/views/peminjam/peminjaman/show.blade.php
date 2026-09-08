@@ -19,7 +19,7 @@
             <dt>Tanggal</dt>
             <dd>{{ $peminjaman->tanggal->toDateString() }}</dd>
             <dt>Waktu</dt>
-            <dd>{{ $peminjaman->jam_mulai }}–{{ $peminjaman->jam_selesai }}</dd>
+            <dd>{{ substr($peminjaman->jam_mulai, 0, 5) }}–{{ substr($peminjaman->jam_selesai, 0, 5) }}</dd>
             <dt>Keperluan</dt>
             <dd>{{ $peminjaman->keperluan }}</dd>
             <dt>Status</dt>

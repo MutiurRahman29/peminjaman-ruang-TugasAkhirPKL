@@ -83,7 +83,9 @@ class PeminjamanTest extends TestCase
                 'tanggal' => now(config('app.timezone'))->subDay()->toDateString(),
             ]))
             ->assertRedirect(route('peminjam.peminjaman.create'))
-            ->assertSessionHasErrors('tanggal');
+            ->assertSessionHasErrors([
+                'tanggal' => 'Tanggal harus hari ini atau setelahnya.',
+            ]);
     }
 
     public function test_end_time_must_be_later_than_start_time(): void
@@ -91,15 +93,22 @@ class PeminjamanTest extends TestCase
         $user = User::factory()->peminjam()->create();
         $ruangan = Ruangan::factory()->create();
 
-        foreach (['09:00', '08:30'] as $jamSelesai) {
-            $this->actingAs($user)
-                ->from(route('peminjam.peminjaman.create'))
-                ->post(route('peminjam.peminjaman.store'), $this->validPayload($ruangan, [
-                    'jam_mulai' => '09:00',
-                    'jam_selesai' => $jamSelesai,
-                ]))
-                ->assertSessionHasErrors('jam_selesai');
-        }
+        $this->actingAs($user)
+            ->from(route('peminjam.peminjaman.create'))
+            ->post(route('peminjam.peminjaman.store'), $this->validPayload($ruangan, [
+                'jam_mulai' => '09:00',
+                'jam_selesai' => '09:00',
+            ]))
+            ->assertSessionHasErrors([
+                'jam_selesai' => 'Jam selesai harus setelah jam mulai.',
+            ]);
+
+        $this->from(route('peminjam.peminjaman.create'))
+            ->post(route('peminjam.peminjaman.store'), $this->validPayload($ruangan, [
+                'jam_mulai' => '09:00',
+                'jam_selesai' => '08:30',
+            ]))
+            ->assertSessionHasErrors('jam_selesai');
     }
 
     public function test_invalid_or_unavailable_rooms_are_rejected(): void
@@ -110,7 +119,9 @@ class PeminjamanTest extends TestCase
         $this->actingAs($user)
             ->from(route('peminjam.peminjaman.create'))
             ->post(route('peminjam.peminjaman.store'), $this->validPayload($digunakan))
-            ->assertSessionHasErrors('id_ruangan');
+            ->assertSessionHasErrors([
+                'id_ruangan' => 'Ruangan yang dipilih tidak valid atau tidak tersedia.',
+            ]);
 
         $this->from(route('peminjam.peminjaman.create'))
             ->post(route('peminjam.peminjaman.store'), $this->validPayload($digunakan, [
@@ -202,6 +213,52 @@ class PeminjamanTest extends TestCase
         $this->actingAs(User::factory()->peminjam()->create())
             ->get(route('peminjam.peminjaman.show', $peminjaman))
             ->assertForbidden();
+    }
+
+    public function test_empty_purpose_is_rejected_by_server_validation(): void
+    {
+        $this->actingAs(User::factory()->peminjam()->create())
+            ->from(route('peminjam.peminjaman.create'))
+            ->post(route('peminjam.peminjaman.store'), $this->validPayload(Ruangan::factory()->create(), [
+                'keperluan' => '',
+            ]))
+            ->assertSessionHasErrors([
+                'keperluan' => 'Keperluan wajib diisi.',
+            ]);
+    }
+
+    public function test_history_and_detail_display_times_without_seconds(): void
+    {
+        $user = User::factory()->peminjam()->create();
+        $peminjaman = Peminjaman::factory()->create([
+            'id_user' => $user->id_user,
+            'jam_mulai' => '08:00:00',
+            'jam_selesai' => '10:00:00',
+        ]);
+
+        $this->actingAs($user)
+            ->get(route('peminjam.peminjaman.index'))
+            ->assertOk()
+            ->assertSee('08:00–10:00')
+            ->assertDontSee('08:00:00');
+
+        $this->get(route('peminjam.peminjaman.show', $peminjaman))
+            ->assertOk()
+            ->assertSee('08:00–10:00')
+            ->assertDontSee('10:00:00');
+    }
+
+    public function test_validation_error_is_only_displayed_once_in_the_form(): void
+    {
+        $response = $this->actingAs(User::factory()->peminjam()->create())
+            ->followingRedirects()
+            ->from(route('peminjam.peminjaman.create'))
+            ->post(route('peminjam.peminjaman.store'), $this->validPayload(Ruangan::factory()->create(), [
+                'keperluan' => '',
+            ]));
+
+        $response->assertOk();
+        $this->assertSame(1, substr_count($response->getContent(), 'Keperluan wajib diisi.'));
     }
 
     /**

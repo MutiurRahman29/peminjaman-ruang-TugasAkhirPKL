@@ -30,7 +30,7 @@
                         <tr>
                             <td>{{ $item->ruangan->nama_ruangan }}</td>
                             <td>{{ $item->tanggal->toDateString() }}</td>
-                            <td>{{ $item->jam_mulai }}–{{ $item->jam_selesai }}</td>
+                            <td>{{ substr($item->jam_mulai, 0, 5) }}–{{ substr($item->jam_selesai, 0, 5) }}</td>
                             <td>{{ $item->keperluan }}</td>
                             <td>{{ $item->status->value }}</td>
                             <td><a href="{{ route('peminjam.peminjaman.show', $item) }}">Lihat</a></td>
