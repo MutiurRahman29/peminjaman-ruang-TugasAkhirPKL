@@ -21,6 +21,7 @@
                         <th>Tanggal</th>
                         <th>Waktu</th>
                         <th>Keperluan</th>
+                        <th>Fasilitas</th>
                         <th>Status</th>
                         <th>Detail</th>
                     </tr>
@@ -32,6 +33,7 @@
                             <td>{{ $item->tanggal->toDateString() }}</td>
                             <td>{{ substr($item->jam_mulai, 0, 5) }}–{{ substr($item->jam_selesai, 0, 5) }}</td>
                             <td>{{ $item->keperluan }}</td>
+                            <td>{{ $item->detailPeminjaman->count() }} jenis fasilitas</td>
                             <td>{{ $item->status->value }}</td>
                             <td><a href="{{ route('peminjam.peminjaman.show', $item) }}">Lihat</a></td>
                         </tr>

@@ -26,6 +26,17 @@
             <dd>{{ $peminjaman->status->value }}</dd>
         </dl>
 
+        <h2>Fasilitas</h2>
+        @if ($peminjaman->detailPeminjaman->isEmpty())
+            <p>Tidak ada fasilitas tambahan.</p>
+        @else
+            <ul>
+                @foreach ($peminjaman->detailPeminjaman as $detail)
+                    <li>{{ $detail->fasilitas->nama_fasilitas }}: {{ $detail->jumlah }}</li>
+                @endforeach
+            </ul>
+        @endif
+
         <p><a href="{{ route('peminjam.peminjaman.index') }}">Kembali ke riwayat peminjaman</a></p>
     </main>
 </body>

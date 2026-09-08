@@ -69,6 +69,34 @@
                     @enderror
                 </div>
 
+                <fieldset>
+                    <legend>Fasilitas tambahan</legend>
+
+                    @error('fasilitas')
+                        <p>{{ $message }}</p>
+                    @enderror
+
+                    @forelse ($fasilitas as $item)
+                        <div>
+                            <label for="fasilitas_{{ $item->id_fasilitas }}">
+                                {{ $item->nama_fasilitas }} (stok total: {{ $item->jumlah }})
+                            </label>
+                            <input
+                                id="fasilitas_{{ $item->id_fasilitas }}"
+                                name="fasilitas[{{ $item->id_fasilitas }}]"
+                                type="number"
+                                min="1"
+                                value="{{ old('fasilitas.'.$item->id_fasilitas) }}"
+                            >
+                            @error('fasilitas.'.$item->id_fasilitas)
+                                <p>{{ $message }}</p>
+                            @enderror
+                        </div>
+                    @empty
+                        <p>Tidak ada fasilitas tersedia saat ini.</p>
+                    @endforelse
+                </fieldset>
+
                 <button type="submit">Kirim Pengajuan</button>
             </form>
         @endif

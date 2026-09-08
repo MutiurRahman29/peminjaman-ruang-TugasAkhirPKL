@@ -2,14 +2,17 @@
 
 namespace App\Http\Controllers\Peminjam;
 
+use App\Enums\KondisiFasilitas;
 use App\Enums\StatusPeminjaman;
 use App\Enums\StatusRuangan;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Peminjam\StorePeminjamanRequest;
+use App\Models\Fasilitas;
 use App\Models\Peminjaman;
 use App\Models\Ruangan;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 
@@ -22,7 +25,7 @@ class PeminjamanController extends Controller
     {
         $peminjaman = $request->user()
             ->peminjaman()
-            ->with('ruangan')
+            ->with(['ruangan', 'detailPeminjaman.fasilitas'])
             ->orderByDesc('tanggal')
             ->orderByDesc('jam_mulai')
             ->get();
@@ -40,7 +43,13 @@ class PeminjamanController extends Controller
             ->orderBy('nama_ruangan')
             ->get();
 
-        return view('peminjam.peminjaman.create', compact('ruangan'));
+        $fasilitas = Fasilitas::query()
+            ->where('kondisi', KondisiFasilitas::Baik)
+            ->where('jumlah', '>', 0)
+            ->orderBy('nama_fasilitas')
+            ->get();
+
+        return view('peminjam.peminjaman.create', compact('ruangan', 'fasilitas'));
     }
 
     /**
@@ -48,12 +57,24 @@ class PeminjamanController extends Controller
      */
     public function store(StorePeminjamanRequest $request): RedirectResponse
     {
-        $peminjaman = $request->user()
-            ->peminjaman()
-            ->create([
-                ...$request->validated(),
-                'status' => StatusPeminjaman::Menunggu,
-            ]);
+        $peminjaman = DB::transaction(function () use ($request) {
+            $peminjaman = $request->user()
+                ->peminjaman()
+                ->create([
+                    ...$request->safe()->only([
+                        'id_ruangan',
+                        'tanggal',
+                        'jam_mulai',
+                        'jam_selesai',
+                        'keperluan',
+                    ]),
+                    'status' => StatusPeminjaman::Menunggu,
+                ]);
+
+            $peminjaman->detailPeminjaman()->createMany($request->selectedFasilitas());
+
+            return $peminjaman;
+        });
 
         return redirect()
             ->route('peminjam.peminjaman.show', $peminjaman)
@@ -67,7 +88,7 @@ class PeminjamanController extends Controller
     {
         Gate::authorize('view', $peminjaman);
 
-        $peminjaman->load('ruangan');
+        $peminjaman->load(['ruangan', 'detailPeminjaman.fasilitas']);
 
         return view('peminjam.peminjaman.show', compact('peminjaman'));
     }
