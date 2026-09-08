@@ -73,7 +73,9 @@ class RuanganController extends Controller
     public function destroy(Ruangan $ruangan): RedirectResponse
     {
         if ($ruangan->peminjaman()->exists()) {
-            return back()->with('error', 'Ruangan tidak dapat dihapus karena sudah memiliki riwayat peminjaman.');
+            return redirect()
+                ->route('admin.ruangan.index')
+                ->with('error', 'Ruangan tidak dapat dihapus karena sudah memiliki riwayat peminjaman.');
         }
 
         try {
@@ -83,7 +85,9 @@ class RuanganController extends Controller
                 throw $exception;
             }
 
-            return back()->with('error', 'Ruangan tidak dapat dihapus karena sudah memiliki riwayat peminjaman.');
+            return redirect()
+                ->route('admin.ruangan.index')
+                ->with('error', 'Ruangan tidak dapat dihapus karena sudah memiliki riwayat peminjaman.');
         }
 
         return redirect()

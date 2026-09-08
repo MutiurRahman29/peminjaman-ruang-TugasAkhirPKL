@@ -176,9 +176,10 @@ class AdminRuanganTest extends TestCase
         ]);
 
         $this->actingAs(User::factory()->admin()->create())
-            ->from(route('admin.ruangan.index'))
+            ->followingRedirects()
             ->delete(route('admin.ruangan.destroy', $ruangan))
-            ->assertSessionHas('error', 'Ruangan tidak dapat dihapus karena sudah memiliki riwayat peminjaman.');
+            ->assertOk()
+            ->assertSee('Ruangan tidak dapat dihapus karena sudah memiliki riwayat peminjaman.');
 
         $this->assertDatabaseHas('ruangan', ['id_ruangan' => $ruangan->id_ruangan]);
         $this->assertDatabaseCount('peminjaman', 1);
