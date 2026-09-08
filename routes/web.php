@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\RuanganController as AdminRuanganController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Peminjam\FasilitasController;
 use App\Http\Controllers\Peminjam\PeminjamanController;
@@ -45,4 +46,11 @@ Route::middleware(['auth', 'role:petugas'])
         Route::get('/peminjaman/{peminjaman}', [PetugasPeminjamanController::class, 'show'])->name('peminjaman.show');
         Route::patch('/peminjaman/{peminjaman}/approve', [PetugasPeminjamanController::class, 'approve'])->name('peminjaman.approve');
         Route::patch('/peminjaman/{peminjaman}/reject', [PetugasPeminjamanController::class, 'reject'])->name('peminjaman.reject');
+    });
+
+Route::middleware(['auth', 'role:admin'])
+    ->prefix('admin')
+    ->name('admin.')
+    ->group(function (): void {
+        Route::resource('ruangan', AdminRuanganController::class)->except('show');
     });

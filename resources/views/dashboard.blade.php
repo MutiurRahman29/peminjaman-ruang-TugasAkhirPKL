@@ -26,6 +26,12 @@
             </nav>
         @endif
 
+        @if (auth()->user()->role === \App\Enums\UserRole::Admin)
+            <nav>
+                <a href="{{ route('admin.ruangan.index') }}">Kelola Ruangan</a>
+            </nav>
+        @endif
+
         <form method="POST" action="{{ route('logout') }}">
             @csrf
             <button type="submit">Keluar</button>
