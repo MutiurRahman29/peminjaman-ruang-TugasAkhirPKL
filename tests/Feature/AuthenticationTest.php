@@ -34,6 +34,20 @@ class AuthenticationTest extends TestCase
         $this->assertAuthenticatedAs($user);
     }
 
+    public function test_login_normalizes_whitespace_and_letter_case_in_username(): void
+    {
+        $user = User::factory()->create([
+            'username' => 'pengguna-valid',
+        ]);
+
+        $this->post(route('login.store'), [
+            'username' => '  PENGGUNA-VALID  ',
+            'password' => 'password',
+        ])->assertRedirect(route('dashboard'));
+
+        $this->assertAuthenticatedAs($user);
+    }
+
     public function test_login_fails_with_an_invalid_password_without_authenticating_the_user(): void
     {
         $user = User::factory()->create();

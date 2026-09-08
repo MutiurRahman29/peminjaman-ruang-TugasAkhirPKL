@@ -30,6 +30,7 @@
             <nav>
                 <a href="{{ route('admin.ruangan.index') }}">Kelola Ruangan</a>
                 <a href="{{ route('admin.fasilitas.index') }}">Kelola Fasilitas</a>
+                <a href="{{ route('admin.users.index') }}">Kelola Pengguna</a>
             </nav>
         @endif
 

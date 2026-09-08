@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\FasilitasController as AdminFasilitasController;
 use App\Http\Controllers\Admin\RuanganController as AdminRuanganController;
+use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Peminjam\FasilitasController;
 use App\Http\Controllers\Peminjam\PeminjamanController;
@@ -59,4 +60,5 @@ Route::middleware(['auth', 'role:admin'])
         Route::resource('fasilitas', AdminFasilitasController::class)
             ->parameters(['fasilitas' => 'fasilitas'])
             ->except('show');
+        Route::resource('users', AdminUserController::class)->except('show');
     });
