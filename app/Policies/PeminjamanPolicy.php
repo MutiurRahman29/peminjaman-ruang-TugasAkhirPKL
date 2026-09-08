@@ -13,7 +13,7 @@ class PeminjamanPolicy
      */
     public function view(User $user, Peminjaman $peminjaman): bool
     {
-        return $user->role === UserRole::Petugas
+        return in_array($user->role, [UserRole::Admin, UserRole::Petugas], true)
             || ($user->role === UserRole::Peminjam && $user->id_user === $peminjaman->id_user);
     }
 

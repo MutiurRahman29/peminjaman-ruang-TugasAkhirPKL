@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\FasilitasController as AdminFasilitasController;
+use App\Http\Controllers\Admin\PeminjamanController as AdminPeminjamanController;
 use App\Http\Controllers\Admin\RuanganController as AdminRuanganController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
@@ -56,6 +57,8 @@ Route::middleware(['auth', 'role:admin'])
     ->prefix('admin')
     ->name('admin.')
     ->group(function (): void {
+        Route::get('/peminjaman', [AdminPeminjamanController::class, 'index'])->name('peminjaman.index');
+        Route::get('/peminjaman/{peminjaman}', [AdminPeminjamanController::class, 'show'])->name('peminjaman.show');
         Route::resource('ruangan', AdminRuanganController::class)->except('show');
         Route::resource('fasilitas', AdminFasilitasController::class)
             ->parameters(['fasilitas' => 'fasilitas'])
