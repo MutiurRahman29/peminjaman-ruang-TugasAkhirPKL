@@ -29,6 +29,7 @@
         @if (auth()->user()->role === \App\Enums\UserRole::Admin)
             <nav>
                 <a href="{{ route('admin.ruangan.index') }}">Kelola Ruangan</a>
+                <a href="{{ route('admin.fasilitas.index') }}">Kelola Fasilitas</a>
             </nav>
         @endif
 

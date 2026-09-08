@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\FasilitasController as AdminFasilitasController;
 use App\Http\Controllers\Admin\RuanganController as AdminRuanganController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Peminjam\FasilitasController;
@@ -53,4 +54,7 @@ Route::middleware(['auth', 'role:admin'])
     ->name('admin.')
     ->group(function (): void {
         Route::resource('ruangan', AdminRuanganController::class)->except('show');
+        Route::resource('fasilitas', AdminFasilitasController::class)
+            ->parameters(['fasilitas' => 'fasilitas'])
+            ->except('show');
     });
