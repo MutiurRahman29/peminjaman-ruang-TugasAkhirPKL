@@ -16,6 +16,7 @@ class LoanApprovalService
     public function __construct(
         private readonly RoomAvailabilityService $roomAvailability,
         private readonly FacilityAvailabilityService $facilityAvailability,
+        private readonly LoanScheduleService $loanSchedule,
     ) {}
 
     /**
@@ -31,6 +32,13 @@ class LoanApprovalService
                 ->findOrFail($peminjaman->id_peminjaman);
 
             $this->ensurePending($peminjaman);
+
+            if ($this->loanSchedule->hasStarted(
+                $peminjaman->tanggal->toDateString(),
+                $peminjaman->jam_mulai,
+            )) {
+                throw new DomainException('Pengajuan tidak dapat disetujui karena jadwal sudah dimulai atau berlalu.');
+            }
 
             $ruangan = Ruangan::query()
                 ->lockForUpdate()

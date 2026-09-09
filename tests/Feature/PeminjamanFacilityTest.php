@@ -174,7 +174,7 @@ class PeminjamanFacilityTest extends TestCase
 
         $stokTersedia = app(FacilityAvailabilityService::class)->availableQuantities(
             [$fasilitas->id_fasilitas],
-            now(config('app.timezone'))->toDateString(),
+            now(config('app.timezone'))->addDay()->toDateString(),
             '08:00',
             '09:00',
         );
@@ -253,7 +253,11 @@ class PeminjamanFacilityTest extends TestCase
             ->assertSee('1 jenis fasilitas');
 
         $facilityQueries = collect(DB::getQueryLog())
-            ->filter(fn (array $query): bool => str_contains(strtolower($query['query']), 'from "fasilitas"'))
+            ->filter(function (array $query): bool {
+                $sql = str_replace(['`', '"'], '', strtolower($query['query']));
+
+                return str_contains($sql, 'from fasilitas');
+            })
             ->count();
 
         $this->assertSame(1, $facilityQueries);
@@ -273,7 +277,7 @@ class PeminjamanFacilityTest extends TestCase
     {
         return [
             'id_ruangan' => $ruangan->id_ruangan,
-            'tanggal' => now(config('app.timezone'))->toDateString(),
+            'tanggal' => now(config('app.timezone'))->addDay()->toDateString(),
             'jam_mulai' => '08:00',
             'jam_selesai' => '09:00',
             'keperluan' => 'Rapat pengembangan aplikasi',
@@ -293,7 +297,7 @@ class PeminjamanFacilityTest extends TestCase
         $peminjaman = Peminjaman::factory()->create([
             'id_user' => $user?->id_user ?? User::factory()->peminjam()->create()->id_user,
             'id_ruangan' => $ruangan->id_ruangan,
-            'tanggal' => now(config('app.timezone'))->toDateString(),
+            'tanggal' => now(config('app.timezone'))->addDay()->toDateString(),
             'jam_mulai' => $jamMulai,
             'jam_selesai' => $jamSelesai,
             'status' => $status,
@@ -301,7 +305,7 @@ class PeminjamanFacilityTest extends TestCase
 
         DB::table('peminjaman')
             ->where('id_peminjaman', $peminjaman->id_peminjaman)
-            ->update(['tanggal' => now(config('app.timezone'))->toDateString()]);
+            ->update(['tanggal' => now(config('app.timezone'))->addDay()->toDateString()]);
 
         $peminjaman->detailPeminjaman()->create([
             'id_fasilitas' => $fasilitas->id_fasilitas,

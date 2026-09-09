@@ -6,6 +6,7 @@ use App\Enums\KondisiFasilitas;
 use App\Enums\StatusRuangan;
 use App\Models\Fasilitas;
 use App\Services\FacilityAvailabilityService;
+use App\Services\LoanScheduleService;
 use App\Services\RoomAvailabilityService;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -101,6 +102,15 @@ class StorePeminjamanRequest extends FormRequest
             }
 
             if (! $this->hasValidFacilityKeys($validator)) {
+                return;
+            }
+
+            if (app(LoanScheduleService::class)->hasStarted(
+                (string) $this->input('tanggal'),
+                (string) $this->input('jam_mulai'),
+            )) {
+                $validator->errors()->add('jam_mulai', 'Jam mulai harus setelah waktu saat ini.');
+
                 return;
             }
 

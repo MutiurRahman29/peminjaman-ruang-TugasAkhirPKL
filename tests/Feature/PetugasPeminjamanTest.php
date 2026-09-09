@@ -9,6 +9,7 @@ use App\Models\Fasilitas;
 use App\Models\Peminjaman;
 use App\Models\Ruangan;
 use App\Models\User;
+use Carbon\CarbonImmutable;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
@@ -103,6 +104,23 @@ class PetugasPeminjamanTest extends TestCase
                 'status' => $status->value,
             ]);
         }
+    }
+
+    public function test_pending_loan_cannot_be_approved_after_its_schedule_has_started(): void
+    {
+        $this->travelTo(CarbonImmutable::parse('2026-09-09 10:00:00', config('app.timezone')));
+
+        $peminjaman = $this->createLoan(
+            tanggal: '2026-09-09',
+            jamMulai: '09:00',
+            jamSelesai: '11:00',
+        );
+
+        $this->actingAs(User::factory()->petugas()->create())
+            ->patch(route('petugas.peminjaman.approve', $peminjaman))
+            ->assertSessionHas('error', 'Pengajuan tidak dapat disetujui karena jadwal sudah dimulai atau berlalu.');
+
+        $this->assertPendingAndMasterStockUnchanged($peminjaman);
     }
 
     public function test_second_overlapping_approval_for_the_same_room_fails_and_stays_pending(): void
@@ -250,11 +268,12 @@ class PetugasPeminjamanTest extends TestCase
         string $jamMulai = '08:00',
         string $jamSelesai = '09:00',
         string $keperluan = 'Rapat pengembangan aplikasi',
+        ?string $tanggal = null,
     ): Peminjaman {
         $peminjaman = Peminjaman::factory()->create([
             'id_user' => User::factory()->peminjam()->create()->id_user,
             'id_ruangan' => ($ruangan ?? Ruangan::factory()->create())->id_ruangan,
-            'tanggal' => now(config('app.timezone'))->toDateString(),
+            'tanggal' => $tanggal ?? now(config('app.timezone'))->addDay()->toDateString(),
             'jam_mulai' => $jamMulai,
             'jam_selesai' => $jamSelesai,
             'keperluan' => $keperluan,
@@ -263,7 +282,7 @@ class PetugasPeminjamanTest extends TestCase
 
         DB::table('peminjaman')
             ->where('id_peminjaman', $peminjaman->id_peminjaman)
-            ->update(['tanggal' => now(config('app.timezone'))->toDateString()]);
+            ->update(['tanggal' => $tanggal ?? now(config('app.timezone'))->addDay()->toDateString()]);
 
         foreach ($fasilitas as $idFasilitas => $jumlah) {
             $peminjaman->detailPeminjaman()->create([

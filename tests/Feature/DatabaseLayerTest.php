@@ -12,6 +12,7 @@ use App\Models\Peminjaman;
 use App\Models\Ruangan;
 use App\Models\User;
 use Database\Seeders\DatabaseSeeder;
+use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
@@ -20,11 +21,21 @@ class DatabaseLayerTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_testing_database_uses_sqlite_in_memory(): void
+    public function test_testing_database_is_isolated_from_the_primary_database(): void
     {
-        $this->assertSame('sqlite', config('database.default'));
-        $this->assertSame(':memory:', config('database.connections.sqlite.database'));
-        $this->assertSame('sqlite', app('db')->connection()->getDriverName());
+        $driver = app('db')->connection()->getDriverName();
+        $database = app('db')->connection()->getDatabaseName();
+
+        $this->assertContains($driver, ['sqlite', 'mysql']);
+
+        if ($driver === 'sqlite') {
+            $this->assertSame(':memory:', $database);
+
+            return;
+        }
+
+        $this->assertSame('peminjaman_ruang_testing', $database);
+        $this->assertNotSame('peminjaman_ruang', $database);
     }
 
     public function test_custom_user_key_password_and_role_cast_work(): void
@@ -45,6 +56,24 @@ class DatabaseLayerTest extends TestCase
 
         $this->assertSame(StatusRuangan::Digunakan, $ruangan->status);
         $this->assertSame(KondisiFasilitas::Rusak, $fasilitas->kondisi);
+    }
+
+    public function test_database_rejects_duplicate_room_names(): void
+    {
+        Ruangan::factory()->create(['nama_ruangan' => 'Ruang Unik']);
+
+        $this->expectException(QueryException::class);
+
+        Ruangan::factory()->create(['nama_ruangan' => 'Ruang Unik']);
+    }
+
+    public function test_database_rejects_duplicate_facility_names(): void
+    {
+        Fasilitas::factory()->create(['nama_fasilitas' => 'Fasilitas Unik']);
+
+        $this->expectException(QueryException::class);
+
+        Fasilitas::factory()->create(['nama_fasilitas' => 'Fasilitas Unik']);
     }
 
     public function test_user_and_room_have_many_loans_and_loan_belongs_to_them(): void

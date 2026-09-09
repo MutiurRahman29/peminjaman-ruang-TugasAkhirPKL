@@ -7,6 +7,7 @@ use App\Enums\StatusRuangan;
 use App\Models\Peminjaman;
 use App\Models\Ruangan;
 use App\Models\User;
+use Carbon\CarbonImmutable;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
@@ -86,6 +87,25 @@ class PeminjamanTest extends TestCase
             ->assertSessionHasErrors([
                 'tanggal' => 'Tanggal harus hari ini atau setelahnya.',
             ]);
+    }
+
+    public function test_today_schedule_that_has_started_is_rejected(): void
+    {
+        $this->travelTo(CarbonImmutable::parse('2026-09-09 10:00:00', config('app.timezone')));
+
+        $this->actingAs(User::factory()->peminjam()->create())
+            ->from(route('peminjam.peminjaman.create'))
+            ->post(route('peminjam.peminjaman.store'), $this->validPayload(Ruangan::factory()->create(), [
+                'tanggal' => '2026-09-09',
+                'jam_mulai' => '09:00',
+                'jam_selesai' => '11:00',
+            ]))
+            ->assertRedirect(route('peminjam.peminjaman.create'))
+            ->assertSessionHasErrors([
+                'jam_mulai' => 'Jam mulai harus setelah waktu saat ini.',
+            ]);
+
+        $this->assertDatabaseCount('peminjaman', 0);
     }
 
     public function test_end_time_must_be_later_than_start_time(): void
@@ -271,7 +291,7 @@ class PeminjamanTest extends TestCase
     {
         return [
             'id_ruangan' => $ruangan->id_ruangan,
-            'tanggal' => now(config('app.timezone'))->toDateString(),
+            'tanggal' => now(config('app.timezone'))->addDay()->toDateString(),
             'jam_mulai' => '08:00',
             'jam_selesai' => '09:00',
             'keperluan' => 'Rapat pengembangan aplikasi',
@@ -286,7 +306,7 @@ class PeminjamanTest extends TestCase
     {
         $peminjaman = Peminjaman::factory()->create([
             'id_ruangan' => $ruangan->id_ruangan,
-            'tanggal' => now(config('app.timezone'))->toDateString(),
+            'tanggal' => now(config('app.timezone'))->addDay()->toDateString(),
             'jam_mulai' => '09:00',
             'jam_selesai' => '10:00',
             'status' => $status,
@@ -294,7 +314,7 @@ class PeminjamanTest extends TestCase
 
         DB::table('peminjaman')
             ->where('id_peminjaman', $peminjaman->id_peminjaman)
-            ->update(['tanggal' => now(config('app.timezone'))->toDateString()]);
+            ->update(['tanggal' => now(config('app.timezone'))->addDay()->toDateString()]);
 
         return $peminjaman;
     }

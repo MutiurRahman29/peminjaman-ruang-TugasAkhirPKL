@@ -1,58 +1,139 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Aplikasi Peminjaman Ruang & Fasilitas
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Aplikasi internal sekolah untuk mengelola katalog ruangan dan fasilitas, pengajuan peminjaman, persetujuan petugas, penyelesaian peminjaman, serta laporan admin. Proyek ini menggunakan Laravel, autentikasi session berbasis username, dan MySQL Laragon.
 
-## About Laravel
+## Fitur backend
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- Autentikasi username tanpa registrasi publik.
+- Role `peminjam`, `petugas`, dan `admin` dengan pembatasan route.
+- Pengajuan ruang dengan fasilitas opsional.
+- Validasi jadwal ruang dan stok fasilitas.
+- Approval, penolakan, dan penyelesaian peminjaman oleh petugas.
+- CRUD ruangan, fasilitas, dan pengguna oleh admin.
+- Laporan peminjaman dengan filter dan pagination.
+- Transaksi, row locking, foreign key, dan unique index untuk integritas data.
+- Test otomatis menggunakan SQLite in-memory dan MySQL testing terpisah.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Dokumentasi lanjutan:
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- [Kontrak backend dan panduan frontend](docs/BACKEND_HANDOFF.md)
+- [Struktur database dan ERD](docs/DATABASE.md)
 
-## Learning Laravel
+## Catatan penting untuk pengembang frontend
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+- Pertahankan nama route, URI, dan HTTP method yang tercantum di `docs/BACKEND_HANDOFF.md`.
+- Semua form mutasi wajib memakai `@csrf`; form `PATCH`, `PUT`, dan `DELETE` juga wajib memakai `@method(...)`.
+- Pertahankan nama input agar Form Request backend tetap dapat memvalidasi data.
+- Form pengajuan tidak boleh mengirim atau memberi pengguna kontrol atas `id_user` dan `status`.
+- Tampilkan validation errors, flash `success`, dan flash `error` yang diberikan backend.
+- Jangan menjadikan perhitungan JavaScript sebagai sumber kebenaran untuk bentrok jadwal atau stok fasilitas; backend tetap melakukan validasi final.
+- Jangan mengubah controller, service, policy, model, migration, atau aturan role hanya untuk menyesuaikan tampilan.
+- Jalankan seluruh test backend setelah mengubah Blade atau JavaScript.
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Persyaratan lokal
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+- PHP 8.3 atau lebih baru.
+- Composer 2.
+- MySQL 8 atau MariaDB yang kompatibel.
+- Laragon direkomendasikan untuk Windows.
+- Node.js hanya diperlukan ketika frontend mulai dikembangkan.
 
-## Agentic Development
+## Instalasi
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+1. Pasang dependency PHP.
+
+   ```bash
+   composer install
+   ```
+
+2. Salin konfigurasi environment.
+
+   Windows PowerShell:
+
+   ```powershell
+   Copy-Item .env.example .env
+   ```
+
+   Linux/macOS:
+
+   ```bash
+   cp .env.example .env
+   ```
+
+3. Buat application key.
+
+   ```bash
+   php artisan key:generate
+   ```
+
+4. Buat database kosong bernama `peminjaman_ruang`, lalu sesuaikan kredensial MySQL pada `.env` bila konfigurasi Laragon berbeda.
+
+5. Bersihkan cache konfigurasi dan buat struktur database.
+
+   ```bash
+   php artisan config:clear
+   php artisan migrate
+   php artisan db:seed
+   ```
+
+6. Buka aplikasi melalui virtual host Laragon:
+
+   ```text
+   http://peminjaman-ruang.test/login
+   ```
+
+   Alternatif tanpa virtual host:
+
+   ```bash
+   php artisan serve
+   ```
+
+## Akun pengembangan
+
+Seeder menyediakan akun berikut hanya untuk environment non-production:
+
+| Role | Username | Password |
+| --- | --- | --- |
+| Admin | `admin` | `password` |
+| Petugas | `petugas` | `password` |
+| Peminjam | `peminjam` | `password` |
+
+Ganti password jika proyek digunakan di luar demonstrasi lokal. Seeder memakai `firstOrCreate`, sehingga dijalankan ulang tidak menimpa perubahan akun atau data master yang sudah ada.
+
+## Pengujian
+
+Suite standar memakai SQLite in-memory dan tidak menyentuh MySQL:
 
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+php artisan test --do-not-cache-result
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+Pemeriksaan format:
 
-## Contributing
+```bash
+vendor/bin/pint --test
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### MySQL testing
 
-## Code of Conduct
+Konfigurasi `phpunit.mysql.xml` selalu menunjuk ke database disposable `peminjaman_ruang_testing`. Jangan menyimpan data penting di database tersebut karena test dapat menghapus seluruh isinya.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Buat database testing satu kali:
 
-## Security Vulnerabilities
+```sql
+CREATE DATABASE peminjaman_ruang_testing
+    CHARACTER SET utf8mb4
+    COLLATE utf8mb4_unicode_ci;
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Kemudian jalankan:
 
-## License
+```bash
+php artisan test --configuration phpunit.mysql.xml --do-not-cache-result
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Konfigurasi bawaan mengasumsikan MySQL Laragon pada `127.0.0.1:3306`, username `root`, dan password kosong. Ubah hanya kredensial pada `phpunit.mysql.xml` jika mesin pengembang menggunakan konfigurasi berbeda. Nama database harus tetap `peminjaman_ruang_testing`.
+
+## Batas proyek
+
+Proyek PKL ini ditujukan untuk penggunaan dan demonstrasi lokal. Hosting, domain publik, email, OAuth, registrasi mandiri, dan reset password tidak termasuk scope.
