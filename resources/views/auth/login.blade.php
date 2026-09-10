@@ -1,51 +1,97 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Login - Peminjaman Ruang</title>
+    <title>Masuk – Sistem Peminjaman Ruang</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    @stack('styles')
 </head>
 
-<body class="h-screen w-full flex flex-col justify-center items-center">
-    <div class="-mt-20 h-xl p-4 border-2 rounded-lg shadow-lg">
-        <h1 class="text-3xl m-4 flex justify-center">Masuk</h1>
+<body class="min-h-screen bg-gray-800 text-white flex items-center justify-center px-4">
 
-        <form method="POST" action="{{ route('login.store') }}">
-            @csrf
+    <div class="w-full max-w-sm">
 
-            <div>
-                <label for="username">Username</label>
-                <br>
-                <input id="username" name="username" type="text" value="{{ old('username') }}" required autofocus
-                    autocomplete="username" class="@error('username') border-red-500 @enderror border-2">
-                @error('username')
-                    <p>{{ $message }}</p>
-                @enderror
-            </div>
+        {{-- Brand --}}
+        <div class="mb-8 text-center">
+            <h1 class="text-2xl font-semibold tracking-tight text-white">
+                Sistem Peminjaman Ruang
+            </h1>
+            <p class="mt-2 text-sm text-gray-400">Masuk untuk melanjutkan</p>
+        </div>
 
-            <div class="">
-                <label for="password">Password</label>
-                <br>
-                <input id="password" name="password" type="password" required autocomplete="current-password" class="@error('password') border-red-500 @enderror border-2">
-                @error('password')
-                    <p>{{ $message }}</p>
-                @enderror
-            </div>
 
-            <div>
-                <label for="remember">
-                    <input id="remember" name="remember" type="checkbox" value="1" @checked(old('remember'))>
-                    Ingat saya
-                </label>
-            </div>
+        {{-- Card --}}
+        <div class="rounded-xl border border-gray-700 bg-gray-800 px-6 py-8">
 
-            <button type="submit" class="w-full flex justify-center items-center mt-3 bg-blue-600 p-1 rounded border">Masuk</button>
-        </form>
+            <form method="POST" action="{{ route('login.store') }}" class="space-y-5">
+                @csrf
+
+                <div>
+                    <label for="username" class="mb-1.5 block text-sm text-gray-300">
+                        Username
+                    </label>
+
+                    <input
+                        id="username"
+                        name="username"
+                        type="text"
+                        value="{{ old('username') }}"
+                        required
+                        autofocus
+                        autocomplete="username"
+                        class="w-full rounded-md border border-gray-600 bg-gray-700 px-3 py-2 text-sm text-white outline-none focus:border-gray-400 @error('username') border-red-700 @enderror"
+                    >
+
+                    @error('username')
+                        <p class="mt-1 text-sm text-red-400">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div>
+                    <label for="password" class="mb-1.5 block text-sm text-gray-300">
+                        Password
+                    </label>
+
+                    <input
+                        id="password"
+                        name="password"
+                        type="password"
+                        required
+                        autocomplete="current-password"
+                        class="w-full rounded-md border border-gray-600 bg-gray-700 px-3 py-2 text-sm text-white outline-none focus:border-gray-400 @error('password') border-red-700 @enderror"
+                    >
+
+                    @error('password')
+                        <p class="mt-1 text-sm text-red-400">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div class="flex items-center gap-2">
+                    <input
+                        id="remember"
+                        name="remember"
+                        type="checkbox"
+                        value="1"
+                        @checked(old('remember'))
+                        class="h-4 w-4 rounded border-gray-600 bg-gray-700 accent-white"
+                    >
+                    <label for="remember" class="text-sm text-gray-300">Ingat saya</label>
+                </div>
+
+                <button
+                    type="submit"
+                    class="w-full rounded-md bg-white py-2 text-sm font-semibold text-gray-900 transition hover:bg-gray-200"
+                >
+                    Masuk
+                </button>
+
+            </form>
+
+        </div>
+
     </div>
+
 </body>
 
 </html>
