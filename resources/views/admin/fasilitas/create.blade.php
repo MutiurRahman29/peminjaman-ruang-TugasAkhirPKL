@@ -1,58 +1,52 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tambah Fasilitas</title>
-</head>
-<body>
-    <main>
-        <h1>Tambah Fasilitas</h1>
+@extends('layouts.app')
 
-        <form method="POST" action="{{ route('admin.fasilitas.store') }}">
-            @csrf
+@section('title', 'Tambah Fasilitas')
 
-            <p>
-                <label for="nama_fasilitas">Nama Fasilitas</label>
-                <input id="nama_fasilitas" name="nama_fasilitas" type="text" value="{{ old('nama_fasilitas') }}" maxlength="100" required>
-                @error('nama_fasilitas')
-                    <span>{{ $message }}</span>
-                @enderror
-            </p>
+@section('content')
+<h1>Tambah Fasilitas</h1>
 
-            <p>
-                <label for="jumlah">Jumlah</label>
-                <input id="jumlah" name="jumlah" type="number" value="{{ old('jumlah') }}" min="0" required>
-                @error('jumlah')
-                    <span>{{ $message }}</span>
-                @enderror
-            </p>
+<form method="POST" action="{{ route('admin.fasilitas.store') }}">
+    @csrf
 
-            <p>
-                <label for="kondisi">Kondisi</label>
-                <select id="kondisi" name="kondisi" required>
-                    <option value="">Pilih kondisi</option>
-                    @foreach ($kondisiOptions as $kondisi)
-                        <option value="{{ $kondisi->value }}" @selected(old('kondisi') === $kondisi->value)>{{ $kondisi->value }}</option>
-                    @endforeach
-                </select>
-                @error('kondisi')
-                    <span>{{ $message }}</span>
-                @enderror
-            </p>
+    <p>
+        <label for="nama_fasilitas">Nama Fasilitas</label>
+        <input id="nama_fasilitas" name="nama_fasilitas" type="text" value="{{ old('nama_fasilitas') }}" maxlength="100" required>
+        @error('nama_fasilitas')
+            <span>{{ $message }}</span>
+        @enderror
+    </p>
 
-            <p>
-                <label for="keterangan">Keterangan</label>
-                <textarea id="keterangan" name="keterangan" maxlength="1000">{{ old('keterangan') }}</textarea>
-                @error('keterangan')
-                    <span>{{ $message }}</span>
-                @enderror
-            </p>
+    <p>
+        <label for="jumlah">Jumlah</label>
+        <input id="jumlah" name="jumlah" type="number" value="{{ old('jumlah') }}" min="0" required>
+        @error('jumlah')
+            <span>{{ $message }}</span>
+        @enderror
+    </p>
 
-            <button type="submit">Simpan</button>
-        </form>
+    <p>
+        <label for="kondisi">Kondisi</label>
+        <select id="kondisi" name="kondisi" required>
+            <option value="">Pilih kondisi</option>
+            @foreach ($kondisiOptions as $kondisi)
+                <option value="{{ $kondisi->value }}" @selected(old('kondisi') === $kondisi->value)>{{ $kondisi->value }}</option>
+            @endforeach
+        </select>
+        @error('kondisi')
+            <span>{{ $message }}</span>
+        @enderror
+    </p>
 
-        <p><a href="{{ route('admin.fasilitas.index') }}">Kembali ke daftar fasilitas</a></p>
-    </main>
-</body>
-</html>
+    <p>
+        <label for="keterangan">Keterangan</label>
+        <textarea id="keterangan" name="keterangan" maxlength="1000">{{ old('keterangan') }}</textarea>
+        @error('keterangan')
+            <span>{{ $message }}</span>
+        @enderror
+    </p>
+
+    <button type="submit">Simpan</button>
+</form>
+
+<p><a href="{{ route('admin.fasilitas.index') }}">Kembali ke daftar fasilitas</a></p>
+@endsection

@@ -1,75 +1,69 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detail Pengajuan</title>
-</head>
-<body>
-    <main>
-        <h1>Detail Pengajuan</h1>
+@extends('layouts.app')
 
-        @if (session('success'))
-            <p>{{ session('success') }}</p>
-        @endif
+@section('title', 'Detail Pengajuan')
 
-        @if (session('error'))
-            <p>{{ session('error') }}</p>
-        @endif
+@section('content')
+<h1>Detail Pengajuan</h1>
 
-        <dl>
-            <dt>Peminjam</dt>
-            <dd>{{ $peminjaman->user->nama }}</dd>
-            <dt>Ruangan</dt>
-            <dd>{{ $peminjaman->ruangan->nama_ruangan }}</dd>
-            <dt>Tanggal</dt>
-            <dd>{{ $peminjaman->tanggal->toDateString() }}</dd>
-            <dt>Waktu</dt>
-            <dd>{{ substr($peminjaman->jam_mulai, 0, 5) }}–{{ substr($peminjaman->jam_selesai, 0, 5) }}</dd>
-            <dt>Keperluan</dt>
-            <dd>{{ $peminjaman->keperluan }}</dd>
-            <dt>Status</dt>
-            <dd>{{ $peminjaman->status->value }}</dd>
-        </dl>
+@if (session('success'))
+    <p>{{ session('success') }}</p>
+@endif
 
-        <h2>Fasilitas</h2>
-        @if ($peminjaman->detailPeminjaman->isEmpty())
-            <p>Tidak ada fasilitas tambahan.</p>
-        @else
-            <ul>
-                @foreach ($peminjaman->detailPeminjaman as $detail)
-                    <li>{{ $detail->fasilitas->nama_fasilitas }}: {{ $detail->jumlah }}</li>
-                @endforeach
-            </ul>
-        @endif
+@if (session('error'))
+    <p>{{ session('error') }}</p>
+@endif
 
-        @if ($peminjaman->status === \App\Enums\StatusPeminjaman::Menunggu)
-            <form method="POST" action="{{ route('petugas.peminjaman.approve', $peminjaman) }}">
-                @csrf
-                @method('PATCH')
-                <button type="submit">Setujui</button>
-            </form>
+<dl>
+    <dt>Peminjam</dt>
+    <dd>{{ $peminjaman->user->nama }}</dd>
+    <dt>Ruangan</dt>
+    <dd>{{ $peminjaman->ruangan->nama_ruangan }}</dd>
+    <dt>Tanggal</dt>
+    <dd>{{ $peminjaman->tanggal->toDateString() }}</dd>
+    <dt>Waktu</dt>
+    <dd>{{ substr($peminjaman->jam_mulai, 0, 5) }}–{{ substr($peminjaman->jam_selesai, 0, 5) }}</dd>
+    <dt>Keperluan</dt>
+    <dd>{{ $peminjaman->keperluan }}</dd>
+    <dt>Status</dt>
+    <dd>{{ $peminjaman->status->value }}</dd>
+</dl>
 
-            <form method="POST" action="{{ route('petugas.peminjaman.reject', $peminjaman) }}">
-                @csrf
-                @method('PATCH')
-                <button type="submit">Tolak</button>
-            </form>
-        @endif
+<h2>Fasilitas</h2>
+@if ($peminjaman->detailPeminjaman->isEmpty())
+    <p>Tidak ada fasilitas tambahan.</p>
+@else
+    <ul>
+        @foreach ($peminjaman->detailPeminjaman as $detail)
+            <li>{{ $detail->fasilitas->nama_fasilitas }}: {{ $detail->jumlah }}</li>
+        @endforeach
+    </ul>
+@endif
 
-        @if ($peminjaman->status === \App\Enums\StatusPeminjaman::Disetujui)
-            <form method="POST" action="{{ route('petugas.peminjaman.complete', $peminjaman) }}" onsubmit="return confirm('Tandai peminjaman ini selesai?');">
-                @csrf
-                @method('PATCH')
-                <button type="submit">Tandai Selesai</button>
-            </form>
-        @endif
+@if ($peminjaman->status === \App\Enums\StatusPeminjaman::Menunggu)
+    <form method="POST" action="{{ route('petugas.peminjaman.approve', $peminjaman) }}">
+        @csrf
+        @method('PATCH')
+        <button type="submit">Setujui</button>
+    </form>
 
-        <nav>
-            <a href="{{ route('petugas.peminjaman.index') }}">Antrean Peminjaman</a>
-            <a href="{{ route('petugas.peminjaman.history') }}">Riwayat Peminjaman</a>
-            <a href="{{ route('dashboard') }}">Dashboard</a>
-        </nav>
-    </main>
-</body>
-</html>
+    <form method="POST" action="{{ route('petugas.peminjaman.reject', $peminjaman) }}">
+        @csrf
+        @method('PATCH')
+        <button type="submit">Tolak</button>
+    </form>
+@endif
+
+@if ($peminjaman->status === \App\Enums\StatusPeminjaman::Disetujui)
+    <form method="POST" action="{{ route('petugas.peminjaman.complete', $peminjaman) }}" onsubmit="return confirm('Tandai peminjaman ini selesai?');">
+        @csrf
+        @method('PATCH')
+        <button type="submit">Tandai Selesai</button>
+    </form>
+@endif
+
+<nav>
+    <a href="{{ route('petugas.peminjaman.index') }}">Antrean Peminjaman</a>
+    <a href="{{ route('petugas.peminjaman.history') }}">Riwayat Peminjaman</a>
+    <a href="{{ route('dashboard') }}">Dashboard</a>
+</nav>
+@endsection
