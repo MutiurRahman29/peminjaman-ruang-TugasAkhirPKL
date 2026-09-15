@@ -70,6 +70,13 @@ class AuthenticationTest extends TestCase
             ->assertRedirect(route('dashboard'));
     }
 
+    public function test_authenticated_user_is_redirected_from_the_root_page_to_dashboard(): void
+    {
+        $this->actingAs(User::factory()->create())
+            ->get('/')
+            ->assertRedirect(route('dashboard'));
+    }
+
     public function test_guest_is_redirected_to_login_when_opening_dashboard(): void
     {
         $this->get(route('dashboard'))

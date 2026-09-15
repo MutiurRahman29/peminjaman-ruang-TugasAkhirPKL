@@ -1,63 +1,133 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tambah Pengguna</title>
-</head>
-<body>
-    <main>
-        <h1>Tambah Pengguna</h1>
+@extends('layouts.app')
 
-        <form method="POST" action="{{ route('admin.users.store') }}">
-            @csrf
+@section('title', 'Tambah Pengguna')
 
-            <p>
-                <label for="nama">Nama</label>
-                <input id="nama" name="nama" type="text" value="{{ old('nama') }}" maxlength="100" required>
-                @error('nama')
-                    <span>{{ $message }}</span>
-                @enderror
-            </p>
+@section('content')
 
-            <p>
-                <label for="username">Username</label>
-                <input id="username" name="username" type="text" value="{{ old('username') }}" maxlength="50" required>
-                @error('username')
-                    <span>{{ $message }}</span>
-                @enderror
-            </p>
+<div class="mx-auto max-w-2xl px-6 py-8">
 
-            <p>
-                <label for="password">Password</label>
-                <input id="password" name="password" type="password" required>
-                @error('password')
-                    <span>{{ $message }}</span>
-                @enderror
-            </p>
+    <div class="mb-6">
+        <p class="text-sm text-gray-400">Administrasi</p>
+        <h1 class="mt-1 text-2xl font-semibold text-white">
+            Tambah Pengguna
+        </h1>
+    </div>
 
-            <p>
-                <label for="password_confirmation">Konfirmasi Password</label>
-                <input id="password_confirmation" name="password_confirmation" type="password" required>
-            </p>
+    <form method="POST" action="{{ route('admin.users.store') }}" class="space-y-5">
+        @csrf
 
-            <p>
-                <label for="role">Role</label>
-                <select id="role" name="role" required>
-                    <option value="">Pilih role</option>
-                    @foreach ($roleOptions as $role)
-                        <option value="{{ $role->value }}" @selected(old('role') === $role->value)>{{ $role->value }}</option>
-                    @endforeach
-                </select>
-                @error('role')
-                    <span>{{ $message }}</span>
-                @enderror
-            </p>
+        <div>
+            <label for="nama" class="mb-1.5 block text-sm text-gray-300">
+                Nama
+            </label>
 
-            <button type="submit">Simpan</button>
-        </form>
+            <input
+                id="nama"
+                name="nama"
+                type="text"
+                value="{{ old('nama') }}"
+                maxlength="100"
+                required
+                class="w-full rounded-md border border-gray-600 bg-gray-700 px-3 py-2 text-sm text-white outline-none focus:border-gray-400"
+            >
 
-        <p><a href="{{ route('admin.users.index') }}">Kembali ke daftar pengguna</a></p>
-    </main>
-</body>
-</html>
+            @error('nama')
+                <p class="mt-1 text-sm text-red-400">{{ $message }}</p>
+            @enderror
+        </div>
+
+        <div>
+            <label for="username" class="mb-1.5 block text-sm text-gray-300">
+                Username
+            </label>
+
+            <input
+                id="username"
+                name="username"
+                type="text"
+                value="{{ old('username') }}"
+                maxlength="50"
+                required
+                class="w-full rounded-md border border-gray-600 bg-gray-700 px-3 py-2 text-sm text-white outline-none focus:border-gray-400"
+            >
+
+            @error('username')
+                <p class="mt-1 text-sm text-red-400">{{ $message }}</p>
+            @enderror
+        </div>
+
+        <div>
+            <label for="password" class="mb-1.5 block text-sm text-gray-300">
+                Password
+            </label>
+
+            <input
+                id="password"
+                name="password"
+                type="password"
+                required
+                class="w-full rounded-md border border-gray-600 bg-gray-700 px-3 py-2 text-sm text-white outline-none focus:border-gray-400"
+            >
+
+            @error('password')
+                <p class="mt-1 text-sm text-red-400">{{ $message }}</p>
+            @enderror
+        </div>
+
+        <div>
+            <label for="password_confirmation" class="mb-1.5 block text-sm text-gray-300">
+                Konfirmasi Password
+            </label>
+
+            <input
+                id="password_confirmation"
+                name="password_confirmation"
+                type="password"
+                required
+                class="w-full rounded-md border border-gray-600 bg-gray-700 px-3 py-2 text-sm text-white outline-none focus:border-gray-400"
+            >
+        </div>
+
+        <div>
+            <label for="role" class="mb-1.5 block text-sm text-gray-300">
+                Role
+            </label>
+
+            <select
+                id="role"
+                name="role"
+                required
+                class="w-full rounded-md border border-gray-600 bg-gray-700 px-3 py-2 text-sm text-white outline-none focus:border-gray-400"
+            >
+                <option value="">Pilih role</option>
+                @foreach ($roleOptions as $role)
+                    <option value="{{ $role->value }}" @selected(old('role') === $role->value)>{{ $role->value }}</option>
+                @endforeach
+            </select>
+
+            @error('role')
+                <p class="mt-1 text-sm text-red-400">{{ $message }}</p>
+            @enderror
+        </div>
+
+        <div class="flex items-center gap-3 pt-2">
+            <button
+                type="submit"
+                class="rounded-md bg-white px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-200"
+            >
+                Simpan
+            </button>
+
+            <a
+                href="{{ route('admin.users.index') }}"
+                class="text-sm text-gray-400 hover:text-white"
+            >
+                Batal
+            </a>
+        </div>
+
+    </form>
+
+</div>
+
+@endsection

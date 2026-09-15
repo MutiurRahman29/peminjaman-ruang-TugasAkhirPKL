@@ -1,59 +1,204 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kelola Fasilitas</title>
-</head>
-<body>
-    <main>
-        <h1>Kelola Fasilitas</h1>
+@extends('layouts.app')
 
-        @if (session('success'))
-            <p>{{ session('success') }}</p>
-        @endif
+@section('title', 'Kelola Fasilitas')
 
-        @if (session('error'))
-            <p>{{ session('error') }}</p>
-        @endif
+@section('content')
 
-        <p><a href="{{ route('admin.fasilitas.create') }}">Tambah Fasilitas</a></p>
+<div class="mx-auto max-w-7xl px-6 py-8">
+
+    {{-- Page Header --}}
+    <div class="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+
+        <div>
+            <p class="mb-2 text-sm font-medium text-gray-400">
+                Administrasi
+            </p>
+
+            <h1 class="text-3xl font-semibold tracking-tight text-white">
+                Kelola Fasilitas
+            </h1>
+
+            <p class="mt-2 text-sm text-gray-400">
+                Kelola data fasilitas yang tersedia untuk peminjaman.
+            </p>
+        </div>
+
+        <a
+            href="{{ route('admin.fasilitas.create') }}"
+            class="inline-flex items-center justify-center rounded-lg bg-white px-4 py-2.5 text-sm font-semibold text-gray-900 transition hover:bg-gray-200"
+        >
+            + Tambah Fasilitas
+        </a>
+
+    </div>
+
+
+    {{-- Flash Message --}}
+    @if (session('success'))
+        <div class="mb-6 rounded-lg border border-green-800 bg-green-950/40 px-4 py-3 text-sm text-green-300">
+            {{ session('success') }}
+        </div>
+    @endif
+
+    @if (session('error'))
+        <div class="mb-6 rounded-lg border border-red-800 bg-red-950/40 px-4 py-3 text-sm text-red-300">
+            {{ session('error') }}
+        </div>
+    @endif
+
+
+    {{-- Content --}}
+    <div class="overflow-hidden rounded-xl border border-gray-700 bg-gray-800">
 
         @if ($fasilitas->isEmpty())
-            <p>Belum ada fasilitas.</p>
+
+            {{-- Empty State --}}
+            <div class="flex flex-col items-center justify-center px-6 py-20 text-center">
+
+                <div class="mb-4 flex h-12 w-12 items-center justify-center rounded-full border border-gray-600 bg-gray-700 text-gray-400">
+                    —
+                </div>
+
+                <h2 class="text-lg font-semibold text-white">
+                    Belum ada fasilitas.
+                </h2>
+
+                <p class="mt-2 max-w-md text-sm text-gray-400">
+                    Belum terdapat data fasilitas di dalam sistem.
+                    Tambahkan fasilitas untuk mulai mengelola inventaris.
+                </p>
+
+                <a
+                    href="{{ route('admin.fasilitas.create') }}"
+                    class="mt-6 rounded-lg bg-white px-4 py-2 text-sm font-semibold text-gray-900 transition hover:bg-gray-200"
+                >
+                    Tambah Fasilitas
+                </a>
+
+            </div>
+
         @else
-            <table>
-                <thead>
-                    <tr>
-                        <th>Nama Fasilitas</th>
-                        <th>Jumlah</th>
-                        <th>Kondisi</th>
-                        <th>Keterangan</th>
-                        <th>Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($fasilitas as $item)
+
+            {{-- Table --}}
+            <div class="overflow-x-auto">
+
+                <table class="w-full text-left text-sm">
+
+                    <thead class="border-b border-gray-700 bg-gray-750">
                         <tr>
-                            <td>{{ $item->nama_fasilitas }}</td>
-                            <td>{{ $item->jumlah }}</td>
-                            <td>{{ $item->kondisi->value }}</td>
-                            <td>{{ $item->keterangan ?: '-' }}</td>
-                            <td>
-                                <a href="{{ route('admin.fasilitas.edit', $item) }}">Edit</a>
-                                <form method="POST" action="{{ route('admin.fasilitas.destroy', $item) }}" onsubmit="return confirm('Hapus fasilitas ini?');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit">Hapus</button>
-                                </form>
-                            </td>
+                            <th class="px-6 py-4 font-medium text-gray-400">
+                                Nama Fasilitas
+                            </th>
+
+                            <th class="px-6 py-4 font-medium text-gray-400">
+                                Jumlah
+                            </th>
+
+                            <th class="px-6 py-4 font-medium text-gray-400">
+                                Kondisi
+                            </th>
+
+                            <th class="px-6 py-4 font-medium text-gray-400">
+                                Keterangan
+                            </th>
+
+                            <th class="px-6 py-4 text-right font-medium text-gray-400">
+                                Aksi
+                            </th>
                         </tr>
-                    @endforeach
-                </tbody>
-            </table>
+                    </thead>
+
+                    <tbody class="divide-y divide-gray-700">
+
+                        @foreach ($fasilitas as $item)
+
+                            <tr class="transition hover:bg-gray-750">
+
+                                <td class="px-6 py-4">
+                                    <div class="font-medium text-white">
+                                        {{ $item->nama_fasilitas }}
+                                    </div>
+                                </td>
+
+                                <td class="px-6 py-4 text-gray-300">
+                                    {{ $item->jumlah }}
+                                </td>
+
+                                <td class="px-6 py-4">
+                                    @php $kondisi = $item->kondisi->value; @endphp
+                                    @if (strtolower($kondisi) === 'baik')
+                                        <span class="inline-flex px-2.5 py-1 text-xs font-medium text-green-300">
+                                            {{ $kondisi }}
+                                        </span>
+                                    @else
+                                        <span class="inline-flex px-2.5 py-1 text-xs font-medium text-yellow-300">
+                                            {{ $kondisi }}
+                                        </span>
+                                    @endif
+                                </td>
+
+                                <td class="px-6 py-4 text-gray-300">
+                                    {{ $item->keterangan ?: '-' }}
+                                </td>
+
+                                <td class="px-6 py-4">
+
+                                    <div class="flex items-center justify-end gap-2">
+
+                                        <a
+                                            href="{{ route('admin.fasilitas.edit', $item) }}"
+                                            class="rounded-md border border-gray-600 px-3 py-1.5 text-xs font-medium text-gray-300 transition hover:border-gray-500 hover:bg-gray-700 hover:text-white"
+                                        >
+                                            Edit
+                                        </a>
+
+                                        <form
+                                            method="POST"
+                                            action="{{ route('admin.fasilitas.destroy', $item) }}"
+                                            onsubmit="return confirm('Hapus fasilitas ini?');"
+                                        >
+                                            @csrf
+                                            @method('DELETE')
+
+                                            <button
+                                                type="submit"
+                                                class="rounded-md border border-red-900 px-3 py-1.5 text-xs font-medium text-red-400 transition hover:bg-red-950 hover:text-red-300"
+                                            >
+                                                Hapus
+                                            </button>
+                                        </form>
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+
+                        @endforeach
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
         @endif
 
-        <p><a href="{{ route('dashboard') }}">Kembali ke dashboard</a></p>
-    </main>
-</body>
-</html>
+    </div>
+
+
+    {{-- Back --}}
+    <div class="mt-6">
+
+        <a
+            href="{{ route('dashboard') }}"
+            class="text-sm text-gray-400 transition hover:text-white"
+        >
+            Kembali
+        </a>
+
+    </div>
+
+</div>
+
+@endsection

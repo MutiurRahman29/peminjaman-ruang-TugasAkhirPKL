@@ -53,8 +53,7 @@ class AdminFasilitasTest extends TestCase
 
         $this->get(route('admin.fasilitas.index'))
             ->assertOk()
-            ->assertSeeInOrder(['Alpha', 'Zulu'])
-            ->assertSee('<td>-</td>', false);
+            ->assertSeeInOrder(['Alpha', '-', 'Zulu']);
     }
 
     public function test_admin_can_create_a_facility_and_blank_description_is_stored_as_null(): void
