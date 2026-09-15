@@ -9,7 +9,7 @@
     @stack('styles')
 </head>
 
-<body class="text-white bg-gray-800">
+<body class="flex min-h-screen flex-col bg-gray-800 text-white">
     <header class="w-full shadow-md bg-slate-900 fixed">
         @include('partials.header')
     </header>
@@ -22,11 +22,11 @@
         <p>{{ session('error') }}</p>
     @endif
 
-    <main class="py-24">
+    <main class="flex-1 py-24">
         @yield('content')
     </main>
 
-    <footer class="w-full shadow-md flex justify-center bg-gray-600">
+    <footer class="flex w-full shrink-0 justify-center bg-gray-600 shadow-md">
         @include('partials.footer')
     </footer>
 
