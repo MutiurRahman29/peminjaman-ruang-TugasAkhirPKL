@@ -60,7 +60,7 @@
                 </div>
 
                 <h2 class="text-lg font-semibold text-white">
-                    Belum ada fasilitas
+                    Belum ada fasilitas.
                 </h2>
 
                 <p class="mt-2 max-w-md text-sm text-gray-400">

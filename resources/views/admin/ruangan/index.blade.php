@@ -60,7 +60,7 @@
                 </div>
 
                 <h2 class="text-lg font-semibold text-white">
-                    Belum ada ruangan
+                    Belum ada ruangan.
                 </h2>
 
                 <p class="mt-2 max-w-md text-sm text-gray-400">
@@ -199,7 +199,7 @@
             href="{{ route('dashboard') }}"
             class="text-sm text-gray-400 transition hover:text-white"
         >
-            Kembali 
+            Kembali
         </a>
 
     </div>

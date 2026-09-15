@@ -73,8 +73,7 @@
                 <ul class="divide-y divide-gray-700">
                     @foreach ($peminjaman->detailPeminjaman as $detail)
                         <li class="flex items-center justify-between px-6 py-3">
-                            <span class="text-sm text-gray-200">{{ $detail->fasilitas->nama_fasilitas }}</span>
-                            <span class="text-sm text-gray-400">{{ $detail->jumlah }}</span>
+                            <span class="text-sm text-gray-200">{{ $detail->fasilitas->nama_fasilitas }}: {{ $detail->jumlah }}</span>
                         </li>
                     @endforeach
                 </ul>

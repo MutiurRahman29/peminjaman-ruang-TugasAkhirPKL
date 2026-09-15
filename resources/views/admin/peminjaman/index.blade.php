@@ -26,8 +26,7 @@
     <div class="mb-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         @foreach ($ringkasan as $status => $total)
             <div class="rounded-xl border border-gray-700 bg-gray-800 px-5 py-4">
-                <p class="text-xs text-gray-400">{{ $status }}</p>
-                <p class="mt-1 text-2xl font-semibold text-white">{{ $total }}</p>
+                <p class="text-2xl font-semibold text-white">{{ $status }}: {{ $total }}</p>
             </div>
         @endforeach
     </div>
@@ -52,6 +51,9 @@
                         <option value="{{ $status->value }}" @selected(($filters['status'] ?? '') === $status->value)>{{ $status->value }}</option>
                     @endforeach
                 </select>
+                @error('status')
+                    <p class="mt-1 text-sm text-red-400">{{ $message }}</p>
+                @enderror
             </div>
 
             <div>
@@ -66,6 +68,9 @@
                         <option value="{{ $item->id_ruangan }}" @selected((string) ($filters['id_ruangan'] ?? '') === (string) $item->id_ruangan)>{{ $item->nama_ruangan }}</option>
                     @endforeach
                 </select>
+                @error('id_ruangan')
+                    <p class="mt-1 text-sm text-red-400">{{ $message }}</p>
+                @enderror
             </div>
 
             <div>
@@ -80,6 +85,9 @@
                         <option value="{{ $item->id_user }}" @selected((string) ($filters['id_user'] ?? '') === (string) $item->id_user)>{{ $item->nama }} ({{ $item->username }})</option>
                     @endforeach
                 </select>
+                @error('id_user')
+                    <p class="mt-1 text-sm text-red-400">{{ $message }}</p>
+                @enderror
             </div>
 
             <div>
@@ -91,6 +99,9 @@
                     value="{{ $filters['tanggal_mulai'] ?? '' }}"
                     class="w-full rounded-md border border-gray-600 bg-gray-700 px-3 py-2 text-sm text-white outline-none focus:border-gray-400"
                 >
+                @error('tanggal_mulai')
+                    <p class="mt-1 text-sm text-red-400">{{ $message }}</p>
+                @enderror
             </div>
 
             <div>
@@ -102,6 +113,9 @@
                     value="{{ $filters['tanggal_selesai'] ?? '' }}"
                     class="w-full rounded-md border border-gray-600 bg-gray-700 px-3 py-2 text-sm text-white outline-none focus:border-gray-400"
                 >
+                @error('tanggal_selesai')
+                    <p class="mt-1 text-sm text-red-400">{{ $message }}</p>
+                @enderror
             </div>
 
             <div class="flex items-end gap-2">

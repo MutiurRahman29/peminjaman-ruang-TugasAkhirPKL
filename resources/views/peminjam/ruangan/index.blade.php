@@ -38,7 +38,7 @@
                 </h2>
 
                 <p class="mt-2 text-sm text-gray-400">
-                    Tidak ada ruangan yang tersedia saat ini.
+                    Tidak ada ruangan tersedia.
                 </p>
 
             </div>

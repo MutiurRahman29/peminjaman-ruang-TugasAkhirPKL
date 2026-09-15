@@ -91,7 +91,7 @@
                                 <td class="px-6 py-4 text-gray-300">{{ $item->tanggal->toDateString() }}</td>
                                 <td class="px-6 py-4 text-gray-300">{{ substr($item->jam_mulai, 0, 5) }}–{{ substr($item->jam_selesai, 0, 5) }}</td>
                                 <td class="px-6 py-4 max-w-xs truncate text-gray-300">{{ $item->keperluan }}</td>
-                                <td class="px-6 py-4 text-gray-300">{{ $item->detailPeminjaman->count() }} jenis</td>
+                                <td class="px-6 py-4 text-gray-300">{{ $item->detailPeminjaman->count() }} jenis fasilitas</td>
                                 <td class="px-6 py-4">
                                     @php $st = $item->status->value; @endphp
                                     @if (strtolower($st) === 'disetujui')
