@@ -88,6 +88,14 @@ Dokumentasi lanjutan:
    php artisan serve
    ```
 
+7. Project ini menggunakan Alpine.js untuk kebutuhan interaksi dan animasi ringan pada tampilan.
+
+Install Alpine.js menggunakan pnpm:
+
+```bash
+pnpm add alpinejs
+```
+
 ## Akun pengembangan
 
 Seeder menyediakan akun berikut hanya untuk environment non-production:

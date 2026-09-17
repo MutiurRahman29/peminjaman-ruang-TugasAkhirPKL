@@ -8,21 +8,21 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body class="min-h-screen bg-gray-800 text-white flex items-center justify-center px-4">
+<body class="min-h-screen bg-gray-900 text-white flex items-center justify-center px-4">
 
     <div class="w-full max-w-sm">
 
         {{-- Brand --}}
         <div class="mb-8 text-center">
-            <h1 class="text-2xl font-semibold tracking-tight text-white">
+            <h1 class="text-3xl font-semibold tracking-tight text-white">
                 Sistem Peminjaman Ruang
             </h1>
-            <p class="mt-2 text-sm text-gray-400">Masuk untuk melanjutkan</p>
+            <p class="mt-2 text-sm font-normal text-gray-400">Masuk untuk melanjutkan</p>
         </div>
 
 
         {{-- Card --}}
-        <div class="rounded-xl border border-gray-700 bg-gray-800 px-6 py-8">
+        <div class="rounded-xl border border-gray-500 bg-gray-900 px-6 py-8">
 
             <form method="POST" action="{{ route('login.store') }}" class="space-y-5">
                 @csrf
@@ -40,7 +40,7 @@
                         required
                         autofocus
                         autocomplete="username"
-                        class="w-full rounded-md border border-gray-600 bg-gray-700 px-3 py-2 text-sm text-white outline-none focus:border-gray-400 @error('username') border-red-700 @enderror"
+                        class="w-full rounded-md border border-gray-600 bg-gray-800 px-3 py-2 text-sm text-white outline-none focus:border-gray-400 @error('username') border-red-700 @enderror"
                     >
 
                     @error('username')
@@ -59,7 +59,7 @@
                         type="password"
                         required
                         autocomplete="current-password"
-                        class="w-full rounded-md border border-gray-600 bg-gray-700 px-3 py-2 text-sm text-white outline-none focus:border-gray-400 @error('password') border-red-700 @enderror"
+                        class="w-full rounded-md border border-gray-600 bg-gray-800 px-3 py-2 text-sm text-white outline-none focus:border-gray-400 @error('password') border-red-700 @enderror"
                     >
 
                     @error('password')
