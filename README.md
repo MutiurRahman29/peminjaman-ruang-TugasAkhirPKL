@@ -94,6 +94,7 @@ Install Alpine.js menggunakan pnpm:
 
 ```bash
 pnpm add alpinejs
+```
 
 ## Akun pengembangan
 
