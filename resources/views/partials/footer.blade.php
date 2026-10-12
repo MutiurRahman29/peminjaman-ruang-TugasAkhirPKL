@@ -1,7 +1,7 @@
 <footer class="border-t border-border bg-[#1f1d1b] text-ivory">
     <div class="page-section py-12 sm:py-16">
-        <div class="grid gap-10 border-b border-border/40 pb-10 sm:grid-cols-2 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,0.9fr)_minmax(0,1.2fr)_minmax(0,0.95fr)]">
-            <div class="max-w-sm">
+        <div class="grid grid-cols-2 gap-x-6 gap-y-10 border-b border-border/40 pb-10 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,0.9fr)_minmax(0,1.2fr)_minmax(0,0.95fr)] lg:gap-x-10">
+            <div class="col-span-2 max-w-sm lg:col-span-1">
                 <a href="{{ route('home') }}" class="group inline-flex items-center gap-3" aria-label="Kembali ke beranda">
                     <span class="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-ivory text-xl text-charcoal transition-transform duration-200 group-hover:scale-105" aria-hidden="true">🙂</span>
                     <span class="block text-sm font-semibold text-ivory">Ruang &amp; Fasilitas</span>
@@ -52,18 +52,18 @@
                 </ul>
             </div>
 
-            <div>
+            <div class="col-span-2 lg:col-span-1">
                 <h2 class="text-[11px] font-bold uppercase tracking-[0.18em] text-[#d1c9c3]">Tim</h2>
-                <ul class="mt-5 space-y-3 text-sm leading-5 text-border">
-                    <li><a target="_blank" href="https://www.instagram.com/samil_bsyv?exln=MWJlM204bmF2cWdkZA==" class="text-border transition-colors hover:text-ivory">Syamil Cholid Atsani</a></li>
-                    <li><a target="_blank" href="https://www.instagram.com/acidd_ux?xtok=NHN6eTVobGNrY2hr" class="text-border transition-colors hover:text-ivory">Muhammad Al Rasyid</a></li>
-                    <li><a target="_blank" href="https://www.instagram.com/lintyurrhmn?rpxt=MWU5MnkwaWN1cGwyMw==" class="text-border transition-colors hover:text-ivory">Lintang Mutiur Rahman</a></li>
-                    <li><a target="_blank" href="https://www.instagram.com/arjunhfdzz?vrfl=c3MwZW1uYWN2cDUz" class="text-border transition-colors hover:text-ivory">Arjun Hafidz Meiansya</a></li>
+                <ul class="mt-5 grid grid-cols-2 gap-x-6 gap-y-3 text-sm leading-5 text-border lg:grid-cols-1">
+                    <li><a target="_blank" rel="noopener noreferrer" href="https://www.instagram.com/samil_bsyv?exln=MWJlM204bmF2cWdkZA==" class="text-border transition-colors hover:text-ivory">Syamil Cholid Atsani</a></li>
+                    <li><a target="_blank" rel="noopener noreferrer" href="https://www.instagram.com/acidd_ux?xtok=NHN6eTVobGNrY2hr" class="text-border transition-colors hover:text-ivory">Muhammad Al Rasyid</a></li>
+                    <li><a target="_blank" rel="noopener noreferrer" href="https://www.instagram.com/lintyurrhmn?rpxt=MWU5MnkwaWN1cGwyMw==" class="text-border transition-colors hover:text-ivory">Lintang Mutiur Rahman</a></li>
+                    <li><a target="_blank" rel="noopener noreferrer" href="https://www.instagram.com/arjunhfdzz?vrfl=c3MwZW1uYWN2cDUz" class="text-border transition-colors hover:text-ivory">Arjun Hafidz Meiansya</a></li>
                 </ul>
             </div>
         </div>
 
-        <div class="flex flex-col items-center justify-between gap-3 pt-6 text-xs text-[#a9a29b] sm:flex-row">
+        <div class="flex flex-col items-start justify-between gap-3 pt-6 text-xs text-[#a9a29b] sm:flex-row sm:items-center">
             <p>&copy; {{ date('Y') }} PKL BBPPMPV BMTI ELIT</p>
             <p>Semoga Project Ini Dapat Membantu Terimakasih.</p>
         </div>

@@ -79,7 +79,7 @@
 
                 <div class="mt-12 grid gap-5 lg:grid-cols-3">
                     <article class="group overflow-hidden rounded-[1.75rem] border border-[#47413d] bg-[#f5f0e9] transition duration-300 hover:-translate-y-1 hover:border-[#725b4d]/60">
-                        <img src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1200&q=80" alt="Interior ruangan kerja modern" class="block aspect-[16/10] w-full object-cover" width="720" height="440" loading="lazy">
+                        <img src="{{ asset('images/ruangan.jpg') }}" alt="Interior ruangan kerja modern" class="block aspect-[16/10] w-full object-cover" width="720" height="440" loading="lazy">
                         <div class="p-6 sm:p-7">
                             <p class="text-[10px] font-bold uppercase tracking-[0.18em] text-[#725b4d]">Katalog ruang</p>
                             <h3 class="mt-4 text-[1.35rem] font-bold text-[#292723]">Temukan ruang yang sesuai</h3>
@@ -89,7 +89,7 @@
                     </article>
 
                     <article class="group overflow-hidden rounded-[1.75rem] border border-[#47413d] bg-[#f5f0e9] transition duration-300 hover:-translate-y-1 hover:border-[#725b4d]/60">
-                        <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1200&q=80" alt="Tim sedang berdiskusi di ruang rapat" class="block aspect-[16/10] w-full object-cover" width="720" height="440" loading="lazy">
+                        <img src="{{ asset('images/foto.jpg') }}" alt="Tim sedang berdiskusi di ruang rapat" class="block aspect-[16/10] w-full object-cover" width="720" height="440" loading="lazy">
                         <div class="p-6 sm:p-7">
                             <p class="text-[10px] font-bold uppercase tracking-[0.18em] text-[#725b4d]">Inventaris fasilitas</p>
                             <h3 class="mt-4 text-[1.35rem] font-bold text-[#292723]">Periksa kebutuhan dengan tepat</h3>
@@ -99,7 +99,7 @@
                     </article>
 
                     <article class="group flex flex-col overflow-hidden rounded-[1.75rem] border border-[#47413d] bg-[#f5f0e9] transition duration-300 hover:-translate-y-1 hover:border-[#725b4d]/60">
-                        <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1200&q=80" alt="Pengguna mengisi formulir peminjaman" class="block aspect-[16/10] w-full object-cover" width="720" height="440" loading="lazy">
+                        <img src="{{ asset('images/pengajuan.jpg') }}" alt="Pengguna mengisi formulir peminjaman" class="block aspect-[16/10] w-full object-cover" width="720" height="440" loading="lazy">
                         <div class="flex flex-1 flex-col p-6 sm:p-7">
                             <p class="text-[10px] font-bold uppercase tracking-[0.18em] text-[#725b4d]">Pengajuan</p>
                             <h3 class="mt-4 text-[1.35rem] font-bold text-[#292723]">Tinjau dan kirim permohonan</h3>
@@ -164,6 +164,7 @@
                 <p class="mx-auto mt-5 max-w-2xl text-base leading-7 text-[#f7f5f0]/65 sm:text-lg">Setiap kebutuhan yang kamu susun adalah awal dari proses yang lebih terencana. Ayo lanjutkan-langkah kecil hari ini bisa membuka kesempatan besar ke depan.</p>
                 <div class="mt-8 flex flex-wrap justify-center gap-3">
                     <a href="{{ route('peminjam.ruangan.index') }}" class="action-button-primary shadow-[0_12px_28px_rgba(0,0,0,0.18)]">Lihat katalog <span aria-hidden="true">→</span></a>
+                    <a href="{{ route('peminjam.peminjaman.create') }}" class="action-button-secondary w-full border-white/20 bg-white/10 text-white hover:bg-white/15 hover:text-white sm:w-auto">Ajukan peminjaman</a>
                 </div>
             </div>
         </div>
